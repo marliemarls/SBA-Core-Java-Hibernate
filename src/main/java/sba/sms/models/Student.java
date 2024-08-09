@@ -37,7 +37,9 @@ public class Student {
     public String name;
     @Column(name = "Password", nullable = false, length = 50)
     private String password;
-    @Column(name = "course")
+    @JoinTable (name = "student_courses", joinColumns = @JoinColumn(name = "student_email"), inverseJoinColumns = @JoinColumn(name = "courses_id"))
+
+
     public Set<Course> course;
 
 

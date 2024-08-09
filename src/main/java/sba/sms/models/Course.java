@@ -3,6 +3,7 @@ package sba.sms.models;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.mapping.PrimaryKey;
 
 import java.util.LinkedHashSet;
 import java.util.Objects;
@@ -26,11 +27,14 @@ import java.util.Set;
  */
 
 public class Course {
-    @Column(name = "ID")
-    protected int id;
-    @Column(name = "Name")
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @Column(name = "id")
+    protected int id ;
+    @Column(name = "Name", nullable = false, length = 50)
     public String name;
-    @Column(name = "Instructor")
+    @Column(name = "Instructor" )
     public String instructor;
     @Column(name = "Students")
     public Set<Student> students;
