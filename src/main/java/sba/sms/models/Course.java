@@ -36,7 +36,6 @@ public class Course {
     public Set<Student> students;
 
 
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -49,4 +48,5 @@ public class Course {
     public int hashCode() {
         return Objects.hash(id, name, instructor, students);
     }
+
 }

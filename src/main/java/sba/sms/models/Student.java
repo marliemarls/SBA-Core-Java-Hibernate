@@ -29,11 +29,13 @@ import java.util.Set;
 
 public class Student {
     @Id
-    @Column(name = "Name")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+
+    @Column(name = "Email", nullable = false, length = 50)
+    public String email ;
+    @Column(name = "Name", nullable = false, length = 50)
     public String name;
-    @Column(name = "Email")
-    public String email;
-    @Column(name = "Password")
+    @Column(name = "Password", nullable = false, length = 50)
     private String password;
     @Column(name = "course")
     public Set<Course> course;
