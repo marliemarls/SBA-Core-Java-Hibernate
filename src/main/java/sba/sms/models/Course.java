@@ -3,7 +3,7 @@ package sba.sms.models;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import org.hibernate.mapping.PrimaryKey;
+
 
 import java.util.LinkedHashSet;
 import java.util.Objects;

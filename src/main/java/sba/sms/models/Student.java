@@ -25,22 +25,31 @@ import java.util.Set;
 @AllArgsConstructor
 @RequiredArgsConstructor
 @ToString
+@FieldDefaults(level = AccessLevel.PRIVATE)
 
 
 public class Student {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JoinTable (name = "student_courses", joinColumns = @JoinColumn(name = "student_email"), inverseJoinColumns = @JoinColumn(name = "courses_id"))
-    @Column(name = "Email", nullable = false, length = 50)
-    public String email ;
+    @NonNull
+    @Id @Column(length = 50, name = "Email")
+    String email ;
+    @NonNull
     @Column(name = "Name", nullable = false, length = 50)
-    public String name;
+    String name;
+    @NonNull
     @Column(name = "Password", nullable = false, length = 50)
-    private String password;
+    String password;
 
+    @ToString.Exclude
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH}, fetch =
+            FetchType.EAGER)
+    @JoinTable(name = "student_courses", joinColumns = @JoinColumn(name = "student_email"), inverseJoinColumns =
+    @JoinColumn(name = "courses_id"))
+    Set<Course> courses = new LinkedHashSet<>();
 
-
-    public Set<Course> course;
+    public void addCourse(Course c){
+        courses.add(c);
+        c.getStudents().add(this);
+    }
 
 
     @Override
@@ -48,12 +57,13 @@ public class Student {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Student student = (Student) o;
-        return Objects.equals(name, student.name) && Objects.equals(email, student.email) && Objects.equals(password, student.password) && Objects.equals(course, student.course);
+        return Objects.equals(name, student.name) && Objects.equals(email, student.email) && Objects.equals(password,
+                student.password) && Objects.equals(courses, student.courses);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, email, password, course);
+        return Objects.hash(name, email, password, courses);
     }
 }
 
