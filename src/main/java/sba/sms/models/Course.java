@@ -17,6 +17,7 @@ import java.util.Set;
 @AllArgsConstructor
 @RequiredArgsConstructor
 @ToString
+@FieldDefaults(level = AccessLevel.PRIVATE)
 
 
 /**
@@ -35,8 +36,9 @@ public class Course {
     String name;
     @Column(name = "Instructor", nullable = false, length = 50)
     String instructor;
-    @JoinColumn(name = "Students")
-    public Set<Student> students;
+    @ToString.Exclude
+    @ManyToMany(mappedBy = "courses", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH}, fetch = FetchType.EAGER)
+    private Set<Student> students = new LinkedHashSet<>();
 
 
     @Override
