@@ -30,14 +30,14 @@ import java.util.Set;
 public class Student {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
+    @JoinTable (name = "student_courses", joinColumns = @JoinColumn(name = "student_email"), inverseJoinColumns = @JoinColumn(name = "courses_id"))
     @Column(name = "Email", nullable = false, length = 50)
     public String email ;
     @Column(name = "Name", nullable = false, length = 50)
     public String name;
     @Column(name = "Password", nullable = false, length = 50)
     private String password;
-    @JoinTable (name = "student_courses", joinColumns = @JoinColumn(name = "student_email"), inverseJoinColumns = @JoinColumn(name = "courses_id"))
+
 
 
     public Set<Course> course;

@@ -28,15 +28,14 @@ import java.util.Set;
 
 public class Course {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY) @Column(name = "id")
     protected int id ;
-    @Column(name = "Name", nullable = false, length = 50)
-    public String name;
-    @Column(name = "Instructor" )
-    public String instructor;
-    @Column(name = "Students")
+    @NonNull
+    @Column(length = 50, name = "Name")
+    String name;
+    @Column(name = "Instructor", nullable = false, length = 50)
+    String instructor;
+    @JoinColumn(name = "Students")
     public Set<Student> students;
 
 
