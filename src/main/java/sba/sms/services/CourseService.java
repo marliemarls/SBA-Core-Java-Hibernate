@@ -20,16 +20,56 @@ public class CourseService implements CourseI {
 
     @Override
     public void createCourse(Course course) {
-
+        Session s = HibernateUtil.getSessionFactory().openSession();
+        Transaction tx = null;
+        try{
+            tx = s.beginTransaction();
+            s.persist(course);
+            tx.commit();
+        } catch (HibernateException exception){
+            if(tx != null) tx.rollback();
+            exception.printStackTrace();
+        } finally {
+            s.close();
+        }
     }
 
     @Override
     public Course getCourseById(int courseId) {
-        return null;
+        Session s = HibernateUtil.getSessionFactory().openSession();
+        Transaction tx = null;
+        Course course = new Course();
+        try{
+            tx = s.beginTransaction();
+            Query<Course> q = s.createQuery("from Course where id = :id", Course.class);
+            q.setParameter("id", courseId);
+            course = q.getSingleResult();
+            tx.commit();
+        } catch (HibernateException exception){
+            if(tx != null) tx.rollback();
+            exception.printStackTrace();
+        } finally {
+            s.close();
+        }
+        return course;
     }
 
     @Override
     public List<Course> getAllCourses() {
-        return List.of();
+        Session s = HibernateUtil.getSessionFactory().openSession();
+        Transaction tx = null;
+        List<Course> courseList = new ArrayList<>();
+        try{
+            tx = s.beginTransaction();
+            Query<Course> q = s.createQuery("from Course", Course.class);
+            courseList = q.getResultList();
+            tx.commit();
+        } catch (HibernateException exception){
+            if(tx != null) tx.rollback();
+            exception.printStackTrace();
+        } finally {
+            s.close();
+        }
+        return courseList;
     }
 }
