@@ -2,12 +2,14 @@ package sba.sms.services;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 import sba.sms.dao.CourseI;
 import sba.sms.models.Course;
 import sba.sms.utils.HibernateUtil;
 
+import javax.security.auth.login.Configuration;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,10 +19,10 @@ import java.util.List;
  * provides implementation for each method.
  */
 public class CourseService implements CourseI {
-
+    SessionFactory factory = new Configuration().configure().buildSessionFactory();
     @Override
     public void createCourse(Course course) {
-        Session s = HibernateUtil.getSessionFactory().openSession();
+        Session s = factory.openSession();
         Transaction tx = null;
         try{
             tx = s.beginTransaction();
@@ -36,7 +38,7 @@ public class CourseService implements CourseI {
 
     @Override
     public Course getCourseById(int courseId) {
-        Session s = HibernateUtil.getSessionFactory().openSession();
+        Session s = factory.openSession();
         Transaction tx = null;
         Course course = new Course();
         try{
@@ -56,7 +58,7 @@ public class CourseService implements CourseI {
 
     @Override
     public List<Course> getAllCourses() {
-        Session s = HibernateUtil.getSessionFactory().openSession();
+        Session s = factory.openSession();
         Transaction tx = null;
         List<Course> courseList = new ArrayList<>();
         try{

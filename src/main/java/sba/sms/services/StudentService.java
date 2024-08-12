@@ -2,6 +2,7 @@ package sba.sms.services;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.query.NativeQuery;
 import org.hibernate.query.Query;
@@ -10,6 +11,7 @@ import sba.sms.models.Course;
 import sba.sms.models.Student;
 import sba.sms.utils.HibernateUtil;
 
+import javax.security.auth.login.Configuration;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,11 +23,11 @@ import java.util.List;
  */
 
 public class StudentService implements StudentI {
-
+    SessionFactory factory = new Configuration().configure().buildSessionFactory();
 
     @Override
     public List<Student> getAllStudents() {
-        Session s = HibernateUtil.getSessionFactory().openSession();
+        Session s = factory.openSession();
         Transaction tx = null;
         List<Student> studentList = new ArrayList<>();
         try{
@@ -44,7 +46,7 @@ public class StudentService implements StudentI {
 
     @Override
     public void createStudent(Student student) {
-        Session s = HibernateUtil.getSessionFactory().openSession();
+        Session s = factory.openSession();
         Transaction tx = null;
         try{
             tx = s.beginTransaction();
@@ -60,7 +62,7 @@ public class StudentService implements StudentI {
 
     @Override
     public Student getStudentByEmail(String email) {
-        Session s = HibernateUtil.getSessionFactory().openSession();
+        Session s = factory.openSession();
         Transaction tx = null;
         Student student = null;
         try{
@@ -84,9 +86,11 @@ public class StudentService implements StudentI {
         return s != null && s.getPassword().equals(password);
     }
 
+    private static final CourseService courseService = new CourseService();
+
     @Override
     public void registerStudentToCourse(String email, int courseId) {
-        Session s = HibernateUtil.getSessionFactory().openSession();
+        Session s = factory.openSession();
         Transaction tx = null;
         try {
             tx = s.beginTransaction();
@@ -104,7 +108,7 @@ public class StudentService implements StudentI {
 
     @Override
     public List<Course> getStudentCourses(String email) {
-        Session s = HibernateUtil.getSessionFactory().openSession();
+        Session s = factory.openSession();
         Transaction tx = null;
         List<Course> courseList = new ArrayList<>();
         try{
