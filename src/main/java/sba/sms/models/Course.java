@@ -20,17 +20,10 @@ import java.util.Set;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 
 
-/**
- * Course is a POJO, configured as a persistent class that represents (or maps to) a table
- * name 'course' in the database. A Course object contains fields that represent course
- * information and a mapping of 'courses' that indicate an inverse or referencing side
- * of the relationship. Implement Lombok annotations to eliminate boilerplate code.
- */
-
 public class Course {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) @Column(name = "id")
-    protected int id ;
+    int id ;
     @NonNull
     @Column(length = 50, name = "Name")
     String name;
@@ -40,7 +33,10 @@ public class Course {
     @ManyToMany(mappedBy = "courses", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH}, fetch = FetchType.EAGER)
     private Set<Student> students = new LinkedHashSet<>();
 
-
+    public Course(@NonNull String name, String instructor) {
+        this.name = name;
+        this.instructor = instructor;
+    }
 
     @Override
     public boolean equals(Object o) {
