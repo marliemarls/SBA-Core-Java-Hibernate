@@ -80,23 +80,22 @@ public class StudentService implements StudentI {
 
     @Override
     public boolean validateStudent(String email, String password) {
-        Student student = getStudentByEmail(email);
-        return student != null && student.getPassword().equals(password);
+        Student s = getStudentByEmail(email);
+        return s != null && s.getPassword().equals(password);
     }
 
     @Override
     public void registerStudentToCourse(String email, int courseId) {
         Session s = HibernateUtil.getSessionFactory().openSession();
         Transaction tx = null;
-
-        try{
+        try {
             tx = s.beginTransaction();
             Student student = getStudentByEmail(email);
             student.addCourse(courseService.getCourseById(courseId));
             s.merge(student);
             tx.commit();
         } catch (HibernateException exception) {
-            if(tx != null) tx.rollback();
+            if (tx != null) tx.rollback();
             exception.printStackTrace();
         } finally {
             s.close();
