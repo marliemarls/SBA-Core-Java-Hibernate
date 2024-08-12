@@ -20,16 +20,18 @@ import java.util.List;
  */
 public class CourseService implements CourseI {
     SessionFactory factory = new Configuration().configure().buildSessionFactory();
+
     @Override
     public void createCourse(Course course) {
         Session s = factory.openSession();
         Transaction tx = null;
-        try{
+
+        try {
             tx = s.beginTransaction();
             s.persist(course);
             tx.commit();
-        } catch (HibernateException exception){
-            if(tx != null) tx.rollback();
+        } catch (HibernateException exception) {
+            if (tx != null) tx.rollback();
             exception.printStackTrace();
         } finally {
             s.close();
@@ -39,16 +41,17 @@ public class CourseService implements CourseI {
     @Override
     public Course getCourseById(int courseId) {
         Session s = factory.openSession();
+
         Transaction tx = null;
-        Course course = new Course();
-        try{
+        Course course = null;
+        try {
             tx = s.beginTransaction();
             Query<Course> q = s.createQuery("from Course where id = :id", Course.class);
             q.setParameter("id", courseId);
             course = q.getSingleResult();
             tx.commit();
-        } catch (HibernateException exception){
-            if(tx != null) tx.rollback();
+        } catch (HibernateException exception) {
+            if (tx != null) tx.rollback();
             exception.printStackTrace();
         } finally {
             s.close();
@@ -56,18 +59,19 @@ public class CourseService implements CourseI {
         return course;
     }
 
+
     @Override
     public List<Course> getAllCourses() {
         Session s = factory.openSession();
         Transaction tx = null;
-        List<Course> courseList = new ArrayList<>();
-        try{
+        List<Course> courseList = null;
+        try {
             tx = s.beginTransaction();
-            Query<Course> q = s.createQuery("from Course", Course.class);
+            Query<Course> q = s.createQuery("from Course ", Course.class);
             courseList = q.getResultList();
             tx.commit();
-        } catch (HibernateException exception){
-            if(tx != null) tx.rollback();
+        } catch (HibernateException exception) {
+            if (tx != null) tx.rollback();
             exception.printStackTrace();
         } finally {
             s.close();

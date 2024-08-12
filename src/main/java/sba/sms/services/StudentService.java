@@ -23,22 +23,25 @@ import java.util.List;
  */
 
 public class StudentService implements StudentI {
+
     SessionFactory factory = new Configuration().configure().buildSessionFactory();
 
     @Override
     public List<Student> getAllStudents() {
+
+
         Session s = factory.openSession();
         Transaction tx = null;
         List<Student> studentList = new ArrayList<>();
-        try{
+        try {
             tx = s.beginTransaction();
             Query<Student> q = s.createQuery("from Student", Student.class);
             studentList = q.getResultList();
             tx.commit();
-        } catch(HibernateException exception){
-            if(tx != null) tx.rollback();
+        } catch (HibernateException exception) {
+            if (tx != null) tx.rollback();
             exception.printStackTrace();
-        }finally {
+        } finally {
             s.close();
         }
         return studentList;
@@ -48,33 +51,35 @@ public class StudentService implements StudentI {
     public void createStudent(Student student) {
         Session s = factory.openSession();
         Transaction tx = null;
-        try{
+        try {
             tx = s.beginTransaction();
             s.persist(student);
             tx.commit();
-        } catch(HibernateException exception){
-            if(tx != null) tx.rollback();
+        } catch (HibernateException exception) {
+            if (tx != null) tx.rollback();
             exception.printStackTrace();
-        }finally {
+        } finally {
             s.close();
         }
     }
 
     @Override
     public Student getStudentByEmail(String email) {
+
         Session s = factory.openSession();
         Transaction tx = null;
         Student student = null;
-        try{
+        try {
             tx = s.beginTransaction();
             Query<Student> q = s.createQuery("from Student where email = :email", Student.class);
             q.setParameter("email", email);
-            student= q.getSingleResult();
+            student = q.getSingleResult();
             tx.commit();
-        } catch(HibernateException exception){
-            if(tx != null) tx.rollback();
+
+        } catch (Exception exception) {
+            if (tx != null) tx.rollback();
             exception.printStackTrace();
-        }finally {
+        } finally {
             s.close();
         }
         return student;
@@ -87,11 +92,13 @@ public class StudentService implements StudentI {
     }
 
     private static final CourseService courseService = new CourseService();
-
     @Override
     public void registerStudentToCourse(String email, int courseId) {
+
+
         Session s = factory.openSession();
         Transaction tx = null;
+
         try {
             tx = s.beginTransaction();
             Student student = getStudentByEmail(email);
@@ -104,24 +111,26 @@ public class StudentService implements StudentI {
         } finally {
             s.close();
         }
+
     }
+
 
     @Override
     public List<Course> getStudentCourses(String email) {
         Session s = factory.openSession();
         Transaction tx = null;
         List<Course> courseList = new ArrayList<>();
-        try{
+        try {
             tx = s.beginTransaction();
             String nativeGetStudentCourses = "select c.id, c.name, c.instructor from course as c join student_courses as sc on c.id = sc.courses_id join student as s on s.email = sc.student_email where s.email = :email";
             NativeQuery<Course> studentCourses = s.createNativeQuery(nativeGetStudentCourses, Course.class);
             studentCourses.setParameter("email", email);
             courseList = studentCourses.getResultList();
             tx.commit();
-        } catch(HibernateException exception){
-            if(tx != null) tx.rollback();
+        } catch (HibernateException exception) {
+            if (tx != null) tx.rollback();
             exception.printStackTrace();
-        }finally {
+        } finally {
             s.close();
         }
         return courseList;
