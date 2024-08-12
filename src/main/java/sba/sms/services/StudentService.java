@@ -34,6 +34,7 @@ public class StudentService implements StudentI {
         Session s = factory.openSession();
         Transaction tx = null;
         List<Student> studentList = new ArrayList<>();
+
         try {
             tx = s.beginTransaction();
             Query<Student> q = s.createQuery("from Student", Student.class);
