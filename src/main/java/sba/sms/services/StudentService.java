@@ -24,7 +24,7 @@ import java.util.List;
  */
 
 public class StudentService implements StudentI {
-
+    CourseService courseService = new CourseService();
     SessionFactory factory = new Configuration().configure().buildSessionFactory();
 
     @Override
@@ -93,7 +93,7 @@ public class StudentService implements StudentI {
         return s != null && s.getPassword().equals(password);
     }
 
-    private static final CourseService courseService = new CourseService();
+
     @Override
     public void registerStudentToCourse(String email, int courseId) {
 

@@ -46,6 +46,7 @@ public class Student {
     @JoinColumn(name = "courses_id"))
     Set<Course> courses = new LinkedHashSet<>();
 
+
     public void addCourse(Course c){
         courses.add(c);
         c.getStudents().add(this);
