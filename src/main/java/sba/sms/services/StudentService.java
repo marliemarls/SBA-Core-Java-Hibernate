@@ -99,7 +99,6 @@ public class StudentService implements StudentI {
     @Override
     public void registerStudentToCourse(String email, int courseId) {
 
-
         Session s = HibernateUtil.getSessionFactory().openSession();
         Transaction tx = null;
         Set<Course> courseList;
