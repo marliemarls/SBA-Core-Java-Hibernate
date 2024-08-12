@@ -48,7 +48,7 @@ public class CourseService implements CourseI {
             tx = s.beginTransaction();
             Query<Course> q = s.createQuery("from Course where id = :id", Course.class);
             q.setParameter("id", courseId);
-            course = q.getSingleResult();
+            course = s.get(Course.class, courseId);
             tx.commit();
         } catch (HibernateException exception) {
             if (tx != null) tx.rollback();

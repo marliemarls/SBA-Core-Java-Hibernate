@@ -1,6 +1,6 @@
 package sba.sms.services;
 
-import lombok.extern.java.Log;
+
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -16,6 +16,8 @@ import sba.sms.utils.HibernateUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+
 /**
  * StudentService is a concrete class. This class implements the
  * StudentI interface, overrides all abstract service methods and
@@ -75,7 +77,7 @@ public class StudentService implements StudentI {
             tx = s.beginTransaction();
             Query<Student> q = s.createQuery("from Student where email = :email", Student.class);
             q.setParameter("email", email);
-            student = q.getSingleResult();
+            student = s.get(Student.class,email);
             tx.commit();
 
         } catch (Exception exception) {
@@ -98,18 +100,27 @@ public class StudentService implements StudentI {
     public void registerStudentToCourse(String email, int courseId) {
 
 
-        Session s = factory.openSession();
+        Session s = HibernateUtil.getSessionFactory().openSession();
         Transaction tx = null;
+        Set<Course> courseList;
 
         try {
             tx = s.beginTransaction();
-            Student student = getStudentByEmail(email);
-            student.addCourse(courseService.getCourseById(courseId));
-            s.merge(student);
-            tx.commit();
-        } catch (HibernateException exception) {
+            Student student = s.get(Student.class,email);
+            Course course = s.get(Course.class, courseId);
+            courseList = student.getCourses();
+            if(!courseList.contains(course)){
+                courseList.add(course);
+                student.setCourses(courseList);
+                s.merge(student);
+                tx.commit();
+            }else{
+                System.out.println(" Student already registered @!" + course.getName());
+            }
+
+        } catch (Exception e) {
             if (tx != null) tx.rollback();
-            exception.printStackTrace();
+            e.printStackTrace();
         } finally {
             s.close();
         }
